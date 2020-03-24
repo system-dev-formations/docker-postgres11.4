@@ -31,6 +31,7 @@ RUN set -ex \
 		ca-certificates \
 		openssl \
 		tar \
+		git \
 	\
 	&& wget -O postgresql.tar.bz2 "https://ftp.postgresql.org/pub/source/v$PG_VERSION/postgresql-$PG_VERSION.tar.bz2" \
 	&& echo "$PG_SHA256 *postgresql.tar.bz2" | sha256sum -c - \
@@ -43,6 +44,7 @@ RUN set -ex \
 	&& rm postgresql.tar.bz2 \
 	\
 	&& apk add --no-cache --virtual .build-deps \
+	    cmake clang clang-dev g++  \
 		bison \
 		coreutils \
 		dpkg-dev dpkg \
@@ -137,6 +139,10 @@ RUN set -ex \
 		/usr/local/share/doc \
 		/usr/local/share/man \
 	&& find /usr/local -name '*.a' -delete
+
+RUN git clone https://github.com/timescale/timescaledb.git \
+    && cd timescaledb \
+    && git checkout 1.6.1
 
 # make the sample config easier to munge (and "correct by default")
 RUN sed -ri "s!^#?(listen_addresses)\s*=\s*\S+.*!\1 = '*'!" /usr/local/share/postgresql/postgresql.conf.sample
