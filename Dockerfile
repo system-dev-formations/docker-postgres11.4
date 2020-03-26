@@ -26,12 +26,10 @@ ENV PG_VERSION 11.4
 ENV PG_SHA256  02802ddffd1590805beddd1e464dd28a46a41a5f1e1df04bab4f46663195cc8b  
 
 RUN set -ex \
-	\
 	&& apk add --no-cache --virtual .fetch-deps \
 		ca-certificates \
 		openssl \
 		tar \
-		git \
 	\
 	&& wget -O postgresql.tar.bz2 "https://ftp.postgresql.org/pub/source/v$PG_VERSION/postgresql-$PG_VERSION.tar.bz2" \
 	&& echo "$PG_SHA256 *postgresql.tar.bz2" | sha256sum -c - \
@@ -44,7 +42,8 @@ RUN set -ex \
 	&& rm postgresql.tar.bz2 \
 	\
 	&& apk add --no-cache --virtual .build-deps \
-	    cmake clang clang-dev g++  \
+	        cmake clang clang-dev g++  \
+                git \
 		bison \
 		coreutils \
 		dpkg-dev dpkg \
@@ -132,17 +131,20 @@ RUN set -ex \
 # tzdata is optional, but only adds around 1Mb to image size and is recommended by Django documentation:
 # https://docs.djangoproject.com/en/1.10/ref/databases/#optimizing-postgresql-s-configuration
 		tzdata \
+        &&  git clone https://github.com/timescale/timescaledb.git \
+        && cd timescaledb \
+        && git checkout 1.6.1 \
+        && ./bootstrap -DREGRESS_CHECKS=OFF \ 
+        && cd build && make \
+        && make install \ 
+        \
 	&& apk del .fetch-deps .build-deps \
 	&& cd / \
 	&& rm -rf \
 		/usr/src/postgresql \
 		/usr/local/share/doc \
 		/usr/local/share/man \
-	&& find /usr/local -name '*.a' -delete
-
-RUN git clone https://github.com/timescale/timescaledb.git \
-    && cd timescaledb \
-    && git checkout 1.6.1
+	&& find /usr/local -name '*.a' -delete 
 
 # make the sample config easier to munge (and "correct by default")
 RUN sed -ri "s!^#?(listen_addresses)\s*=\s*\S+.*!\1 = '*'!" /usr/local/share/postgresql/postgresql.conf.sample
