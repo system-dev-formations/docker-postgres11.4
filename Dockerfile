@@ -148,7 +148,8 @@ RUN set -ex \
 
 # make the sample config easier to munge (and "correct by default")
 RUN sed -ri "s!^#?(listen_addresses)\s*=\s*\S+.*!\1 = '*'!" /usr/local/share/postgresql/postgresql.conf.sample
-
+# add timescaledb libraries
+RUN sed -i "$ a shared_preload_libraries = 'timescaledb'" /usr/local/share/postgresql/postgresql.conf.sample 
 RUN mkdir -p /var/run/postgresql && chown -R postgres:postgres /var/run/postgresql && chmod 2777 /var/run/postgresql
 
 ENV PGDATA /var/lib/postgresql/data
