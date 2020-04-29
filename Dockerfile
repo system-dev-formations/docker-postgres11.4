@@ -42,8 +42,8 @@ RUN set -ex \
 	&& rm postgresql.tar.bz2 \
 	\
 	&& apk add --no-cache --virtual .build-deps \
-	        cmake clang clang-dev g++  \
-                git \
+	    cmake clang clang-dev g++  \
+        git \
 		bison \
 		coreutils \
 		dpkg-dev dpkg \
