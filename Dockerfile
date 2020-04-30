@@ -145,10 +145,10 @@ RUN set -ex \
         && ./bootstrap -DREGRESS_CHECKS=OFF \ 
         && cd build && make \
         && make install \
-        && wget https://github.com/dimitri/pgloader/archive/v3.6.2.tar.gz
-        && tar -zxvf v3.6.2.tar.gz
-        && cd pgloader-3.6.2
-        && make
+        && wget https://github.com/dimitri/pgloader/archive/v3.6.2.tar.gz \
+        && tar -zxvf v3.6.2.tar.gz \
+        && cd pgloader-3.6.2 \
+        && make \
         \
 	&& apk del .fetch-deps .build-deps \
 	&& cd / \
