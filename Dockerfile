@@ -26,10 +26,18 @@ ENV PG_VERSION 11.4
 ENV PG_SHA256  02802ddffd1590805beddd1e464dd28a46a41a5f1e1df04bab4f46663195cc8b  
 
 RUN set -ex \
+    && echo '@testing http://nl.alpinelinux.org/alpine/edge/testing' >> /etc/apk/repositories && \
 	&& apk add --no-cache --virtual .fetch-deps \
-		ca-certificates \
-		openssl \
-		tar \
+	   ca-certificates \
+	   openssl \
+	   tar \
+	   bash \
+       ca-certificates \
+       g++ \
+       make \
+       sbcl@testing \
+       wget \
+       freetds \
 	\
 	&& wget -O postgresql.tar.bz2 "https://ftp.postgresql.org/pub/source/v$PG_VERSION/postgresql-$PG_VERSION.tar.bz2" \
 	&& echo "$PG_SHA256 *postgresql.tar.bz2" | sha256sum -c - \
@@ -137,6 +145,10 @@ RUN set -ex \
         && ./bootstrap -DREGRESS_CHECKS=OFF \ 
         && cd build && make \
         && make install \
+        && wget https://github.com/dimitri/pgloader/archive/v3.6.2.tar.gz
+        && tar -zxvf v3.6.2.tar.gz
+        && cd pgloader-3.6.2
+        && make
         \
 	&& apk del .fetch-deps .build-deps \
 	&& cd / \
