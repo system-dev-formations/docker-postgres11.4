@@ -137,9 +137,6 @@ RUN set -ex \
         && ./bootstrap -DREGRESS_CHECKS=OFF \ 
         && cd build && make \
         && make install \
-        && git clone https://github.com/ossc-db/pg_bulkload.git \
-        && cd pg_bulkload \
-        && make \
         \
 	&& apk del .fetch-deps .build-deps \
 	&& cd / \
