@@ -37,6 +37,7 @@ RUN set -ex \
        make \
        sbcl@testing \
        wget \
+       curl \
        freetds \
 	\
 	&& wget -O postgresql.tar.bz2 "https://ftp.postgresql.org/pub/source/v$PG_VERSION/postgresql-$PG_VERSION.tar.bz2" \
