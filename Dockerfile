@@ -27,7 +27,9 @@ ENV PG_SHA256  02802ddffd1590805beddd1e464dd28a46a41a5f1e1df04bab4f46663195cc8b
 
 RUN set -ex \
     && echo '@testing http://nl.alpinelinux.org/alpine/edge/testing' >> /etc/apk/repositories  \
-	&& apk add --update \
+    && apk add --update \
+       sbcl@testing \
+    && apk add --no-cache --virtual .fetch-deps \
 	   ca-certificates \
 	   openssl \
 	   tar \
@@ -35,7 +37,6 @@ RUN set -ex \
        ca-certificates \
        g++ \
        make \
-       sbcl@testing \
        wget \
        curl \
        freetds \
