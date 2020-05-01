@@ -150,15 +150,15 @@ RUN set -ex \
         && wget https://github.com/dimitri/pgloader/archive/v3.6.2.tar.gz \
         && tar -zxvf v3.6.2.tar.gz \
         && cd pgloader-3.6.2 \
-        && make \
-        \
-	&& apk del .fetch-deps .build-deps \
-	&& cd / \
-	&& rm -rf \
-		/usr/src/postgresql \
-		/usr/local/share/doc \
-		/usr/local/share/man \
-	&& find /usr/local -name '*.a' -delete 
+        && make
+        
+	#&& apk del .fetch-deps .build-deps \
+	#&& cd / \
+	#&& rm -rf \
+	#	/usr/src/postgresql \
+	#	/usr/local/share/doc \
+	#	/usr/local/share/man \
+	#&& find /usr/local -name '*.a' -delete
 
 # make the sample config easier to munge (and "correct by default")
 RUN sed -ri "s!^#?(listen_addresses)\s*=\s*\S+.*!\1 = '*'!" /usr/local/share/postgresql/postgresql.conf.sample
